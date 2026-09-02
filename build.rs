@@ -2,8 +2,7 @@ use embed_manifest::{embed_manifest, manifest::ExecutionLevel, new_manifest};
 
 fn main() {
     let windows = std::env::var_os("CARGO_CFG_WINDOWS").is_some();
-    // Release only: in a debug build this would pop a UAC dialog and a separate
-    // console window on every `cargo run`.
+    // Release only: in a debug build this would pop a UAC dialog on every run.
     let release = std::env::var("PROFILE").as_deref() == Ok("release");
 
     if windows && release {
@@ -15,4 +14,5 @@ fn main() {
     }
 
     println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=offsets/cs2-dumper.exe");
 }

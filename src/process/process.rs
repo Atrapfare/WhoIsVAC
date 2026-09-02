@@ -1,14 +1,10 @@
-use std::ffi::OsStr;
+use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, System};
 
-use sysinfo::{ProcessesToUpdate, System};
-
-pub fn get_pid(system: &mut System, process: &str) -> Option<u32> {
-    // `true` drops processes that exited since the last refresh, so we never
-    // match a stale entry.
-    system.refresh_processes(ProcessesToUpdate::All, true);
-
-    system
-        .processes_by_name(OsStr::new(process))
-        .next()
-        .map(|proc| proc.pid().as_u32())
+pub fn find_process(system: &mut System, process: &str) -> Option<(u32, String)> {
+    system.refresh_processes_specifics(ProcessesToUpdate::All, true, ProcessRefreshKind::nothing());
+    system.processes().values().find_map(|proc| {
+        let name = proc.name().to_string_lossy();
+        name.eq_ignore_ascii_case(process)
+            .then(|| (proc.pid().as_u32(), name.into_owned()))
+    })
 }

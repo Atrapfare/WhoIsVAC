@@ -4,14 +4,10 @@ use env_logger::fmt::style::Style;
 use env_logger::{Builder, Env, Target};
 use jiff::Zoned;
 
-/// Output is `HH:MM:SS LEVEL message` with a dimmed time and a coloured level.
-/// The level is controlled by RUST_LOG (e.g. `RUST_LOG=debug`), info by default.
 pub fn init() {
     let dim = Style::new().dimmed();
 
     Builder::from_env(Env::default().default_filter_or("info"))
-        // env_logger defaults to stderr; the log is this program's actual
-        // output, so `> log.txt` should capture it.
         .target(Target::Stdout)
         .format(move |buf, record| {
             let level = record.level();
