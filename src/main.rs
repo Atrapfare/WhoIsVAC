@@ -48,7 +48,6 @@ fn main() -> ExitCode {
     for attempt in 1..=MAX_ATTEMPTS {
         debug!("Refreshing process list (attempt {attempt}/{MAX_ATTEMPTS})");
 
-
         if let Some((pid, name)) = find_process(&mut system, process) {
             info!("Found '{name}' with PID {pid}");
             sleep(SLEEP_DURATION_5);
